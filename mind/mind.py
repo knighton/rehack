@@ -1,12 +1,8 @@
 import copy
 import json
 
+from english import DeepClause, UNK, UNIVERSAL_RELS
 
-RELS = 'agent target because'.split()
-UNIVERSAL_RELS = 'because'.split()
-
-
-UNK = 'WHO'
 
 
 class Person(object):
@@ -20,18 +16,6 @@ class VerbSpec(object):
     def __init__(self, lemma, rels):
         self.lemma = lemma
         self.rels = rels
-
-
-class DeepClause(object):
-    def __init__(self, verb, rel2name):
-        self.verb = verb
-        self.rel2name = rel2name
-
-    def to_d(self):
-        return {
-            'verb': self.verb,
-            'rel2name': self.rel2name,
-        }
 
 
 class MindClause(object):
@@ -148,30 +132,6 @@ class Mind(object):
             yield bc
 
     def receive(self, dc):
-        brain_clause = self.convert_to_inside(dc)
-        for bc in self.think_about(brain_clause):
+        mind_clause = self.convert_to_inside(dc)
+        for bc in self.think_about(mind_clause):
             yield self.convert_to_outside(bc)
-
-
-def main():
-    m = Mind()
-    clauses = [
-        DeepClause('see', {
-            'agent': 'Tim',
-            'target': 'Tom',
-        }),
-        DeepClause('see', {
-            'agent': UNK,
-            'target': 'Tom',
-        }),
-    ]
-
-    for c in clauses:
-        print '-' * 80
-        print c.to_d()
-        for clause in m.receive(c):
-            print '*', json.dumps(clause.to_d(), indent=4)
-
-
-if __name__ == '__main__':
-    main()
