@@ -34,7 +34,7 @@ class DeepClause(object):
         }
 
 
-class BrainClause(object):
+class MindClause(object):
     def __init__(self, verb, rel2x):
         self.verb = verb
         self.rel2x = rel2x
@@ -72,7 +72,7 @@ class BrainClause(object):
         return rel
 
 
-class Brain(object):
+class Mind(object):
     def __init__(self):
         self.items = []
         self.name2x = {}
@@ -94,7 +94,7 @@ class Brain(object):
         for rel, name in dc.rel2name.iteritems():
             x = self.name2x.get(name, None)
             rel2x[rel] = x
-        return BrainClause(dc.verb, rel2x)
+        return MindClause(dc.verb, rel2x)
 
     def convert_to_outside(self, bc):
         rel2name = {}
@@ -128,7 +128,7 @@ class Brain(object):
         for rel in pattern[1:]:
             rel2x[rel] = bc.rel2x[rel]
         rel2x[wildcard_rel] = fact.rel2x[wildcard_rel]
-        bc = BrainClause(verb, rel2x)
+        bc = MindClause(verb, rel2x)
         yield bc
 
     def think_about_statement(self, bc):
@@ -154,7 +154,7 @@ class Brain(object):
 
 
 def main():
-    b = Brain()
+    m = Mind()
     clauses = [
         DeepClause('see', {
             'agent': 'Tim',
@@ -169,7 +169,7 @@ def main():
     for c in clauses:
         print '-' * 80
         print c.to_d()
-        for clause in b.receive(c):
+        for clause in m.receive(c):
             print '*', json.dumps(clause.to_d(), indent=4)
 
 
