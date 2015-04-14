@@ -2,6 +2,7 @@ import re
 
 from py.base.table import Table
 from py.base.token import POSSESSIVE_MARK, Token
+from py.contraction import config
 from py.possessive.possessive_renderer import PossessiveRenderer
 
 
@@ -65,119 +66,22 @@ class BigramContractor(object):
 
     @staticmethod
     def init_default():
-        ends_with_s_detector = RegexListMatcher("""
-            s$
-            x$
-            z$
-            ch$
-            sh$
-            zh$
-            th$
-            [iy][sz]ed?$
-            [aeiourl][cs]e$
-            [aeiourl]the$
-        """.split())
-
+        ends_with_s_detector = RegexListMatcher(config.ENDS_WITH_S_SOUND)
         possessive_renderer = PossessiveRenderer()
+        s_second2contract = config.S_SECOND2CONTRACT
+        second2suffix = config.SECOND2SUFFIX
 
-        mandatory_bigram2contraction = {
-            ('it', POSSESSIVE_MARK): 'its',
-        }
-
-        bigram2contraction = {
-            ('will', 'not'): "won't",
-        }
-
-        def make_table(text):
-            handle_row = None
-            handle_column = None
-
-            def handle_value(s):
-                return {
-                    '-': False,
-                    'x': True,
-                    'X': True,
-                }
-
-            return Table.init_from_text(
-                text, handle_row, handle_column, handle_value)
-
-        personal_table = make_table("""
-                     I you he she it we they
-            am       x -   -  -   -  -  -
-            are      - x   -  -   -  x  x
-            is       - -   x  x   x  -  -
-            have_aux x x   -  -   -  x  x
-            has_aux  - -   x  x   x  -  -
-            had_aux  x x   x  x   x  x  x
-            will     x x   x  x   x  x  x
-            would    x x   x  x   x  x  x
-        """)
-
-        shortcut_table = make_table("""
-                     this that here there what where when why how
-            is       -    x    x    x     x    x     x    x   x
-            have_aux -    -    -    -     x    x     -    -   x
-            did      -    -    -    -     -    x     -    x   x
-        """)
-
-        verb_table = make_table("""
-                am are is was were have_aux has_aux had_aux do does did
-            not -  x   x  x   x    x        x       x       x  x    x
-        """)
-
-        modal_table = make_table("""
-                     can could may might must should would will
-            have_aux -   x     -   x     x    x      x     -
-            not      x   x     -   -     x    x      x     X
-        """)
-
-        def make_s_second2contract(text):
-            handle_row = None
-
-            def handle_column(s):
-                return {
-                    'not_s': False,
-                    's': True,
-                }[s]
-
-            def handle_value(s):
-                return {
-                    '-': False,
-                    'x': True,
-                }[s]
-
-            table = Table.init_from_text(
-                text, handle_row, handle_column, handle_value)
-            return table.get_dict()
-
-        s_second2contract = make_s_second2contract("""
-                  not_s s
-          has_aux x     -
-          is      x     -
-          %s      x     x
-          will    x     x
-          would   x     x
-        """ % POSSESSIVE_MARK)
-
-        def make_second2suffix(text):
-            lines = text.strip().split('\n')
-            assert len(lines) == 2
-            sss = map(lambda line: line.split(), lines)
-            assert len(sss[0]) == len(sss[1])
-            return dict(zip(sss[0], sss[1]))
-
-        second2suffix = make_second2suffix("""
-            am are is have_aux has_aux had_aux did not will would %s
-            'm 're 's 've      's      'd      'd  n't 'll  'd    's
-        """ % POSSESSIVE_MARK)
-
+        # Combine tables and verify second words are accounted for in
+        # second2suffix.
         bigram2contract = {}
-        for table in [personal_table, shortcut_table, verb_table, modal_table]:
+        for table in [config.PERSONAL_BIGRAMS, config.CORRELATIVE_BIGRAMS,
+                      config.VERB_BIGRAMS, config.MODAL_BIGRAMS]:
             for row_second, column_first, is_contracted in table.each():
                 assert row_second in second2suffix
                 bigram = (column_first, row_second)
                 bigram2contract[bigram] = is_contracted
+        for (first, second) in s_second2contract:
+            assert second in second2suffix
 
         return BigramContractor(
             ends_with_s_detector, possessive_renderer,
