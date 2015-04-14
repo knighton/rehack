@@ -75,13 +75,13 @@ MODAL_BIGRAMS = _make_table("""
 
 
 def _make_s_second2contract(text):
-    handle_row = None
-
-    def handle_column(s):
+    def handle_row(s):
         return {
             'not_s': False,
             's': True,
         }[s]
+
+    handle_column = None
 
     def handle_value(s):
         return {
@@ -95,12 +95,9 @@ def _make_s_second2contract(text):
 
 
 S_SECOND2CONTRACT = _make_s_second2contract("""
-          not_s s
-  has_aux x     -
-  is      x     -
-  %s      x     x
-  will    x     x
-  would   x     x
+          has_aux is %s will would
+    not_s x       x  x  x    x
+    s     -       -  x  x    x
 """ % POSSESSIVE_MARK)
 
 

@@ -68,6 +68,8 @@ class BigramContractor(object):
     def init_default():
         ends_with_s_detector = RegexListMatcher(config.ENDS_WITH_S_SOUND)
         possessive_renderer = PossessiveRenderer()
+        mandatory_bigram2contraction = config.MANDATORY_BIGRAM2CONTRACTION
+        bigram2contraction = config.BIGRAM2CONTRACTION
         s_second2contract = config.S_SECOND2CONTRACT
         second2suffix = config.SECOND2SUFFIX
 
