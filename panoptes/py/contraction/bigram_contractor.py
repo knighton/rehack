@@ -58,6 +58,8 @@ class BigramContractor(object):
         self._s_second2contract = s_second2contract
 
         # Last token of bigram -> contraction suffix.
+        #
+        # POSSESSIVE_MARK suffixes have to be handled specially.
         self._second2suffix = second2suffix
 
         # If the second token in a pair is not in this set, the pair is not
@@ -97,6 +99,12 @@ class BigramContractor(object):
             s = token.text()
         return s
 
+    def _contract_normally(self, first, second_key):
+        suffix = self._second2suffix[second_key]
+        if suffix == POSSESSIVE_MARK:
+            sufffix = self.possessive_renderer.apos_or_apos_s(first)
+        return first.text() + suffix
+
     def maybe_contract(self, first, second, only_required_by_syntax=False):
         """
         (first, second) -> contracted word or None if no contraction.
@@ -132,8 +140,7 @@ class BigramContractor(object):
         r = self._bigram2contract.get(bigram)
         if r is not None:
             if r:
-                suffix = self._second2suffix[second_key]
-                return first.text() + suffix
+                return self._contract_normally(first, second_key)
             else:
                 return None
 
@@ -144,8 +151,7 @@ class BigramContractor(object):
         r = self._s_second2contract.get(s_pair)
         if r is not None:
             if r:
-                suffix = self._second2suffix[second_key]
-                return first.text() + suffix
+                return self._contract_normally(first, second_key)
             else:
                 return None
 

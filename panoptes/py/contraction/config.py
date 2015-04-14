@@ -111,5 +111,5 @@ def _make_second2suffix(text):
 
 SECOND2SUFFIX = _make_second2suffix("""
     am are is have_aux has_aux had_aux did not will would %s
-    'm 're 's 've      's      'd      'd  n't 'll  'd    's
-""" % POSSESSIVE_MARK)
+    'm 're 's 've      's      'd      'd  n't 'll  'd    %s
+""" % (POSSESSIVE_MARK, POSSESSIVE_MARK))
