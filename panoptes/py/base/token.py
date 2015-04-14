@@ -1,5 +1,8 @@
 # The token text to represent 's and ' as appropriate.
-POSSESSIVE_MARK = '<POS>'
+POSSESSIVE_MARK = '[POS]'
+
+# The token text to represent a and an as appropriate.
+A_OR_AN = '[A]'
 
 
 class Token(object):
