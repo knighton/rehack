@@ -5,6 +5,11 @@ class Contractor(object):
     def __init__(self, bigram_contractor):
         self._bigrams = bigram_contractor
 
+    @staticmethod
+    def init_default():
+        bigrams = BigramContractor.init_default()
+        return Contractor(bigrams)
+
     def contract(self, tokens, only_required_by_syntax):
         ss = []
         i = 0
