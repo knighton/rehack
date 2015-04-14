@@ -7,7 +7,7 @@ class Token(object):
     A single token, with all the properties contracting et al need to work.
     """
 
-    def __init__(self, text, is_nontransitive_verb):
+    def __init__(self, text, is_nontransitive_verb, is_aux_verb):
         # The actual text.
         self._text = text
 
