@@ -1,4 +1,4 @@
-class PossessiveDecider(object):
+class PossessiveRenderer(object):
     """
     Determine whether the possessive form of a word should end with 's or '.
     """
