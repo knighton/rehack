@@ -1,5 +1,9 @@
 #include <Python.h>
 
+#include "cc/base/warning.h"
+
+namespace {
+
 char FAST_VERB_DOC[] =
     "Verb handling in C++ for performance reasons.\n";
 
@@ -21,6 +25,8 @@ char CONJUGATE_DOC[] =
     "* 9-14 past: 1st person singular, 2s, 3s, 1st plural, 2p, 3p\n";
 
 PyObject* conjugate(PyObject* self, PyObject* args) {
+    UNUSED(self);
+    UNUSED(args);
     return NULL;  // XXX
 }
 
@@ -35,6 +41,8 @@ char LEMMATIZE_DOC[] =
     "* 9-14 past: 1st person singular, 2s, 3s, 1st plural, 2p, 3p\n";
 
 PyObject* lemmatize(PyObject* self, PyObject* args) {
+    UNUSED(self);
+    UNUSED(args);
     return NULL;  // XXX
 }
 
@@ -42,6 +50,8 @@ char SAY_DOC[] =
     "VerbWithContext as dict -> (pre words, main words) or None.\n";
 
 PyObject* say(PyObject* self, PyObject* args) {
+    UNUSED(self);
+    UNUSED(args);
     return NULL;  // XXX
 }
 
@@ -49,6 +59,8 @@ char IS_VALID_DOC[] =
     "VerbWithContext -> bool.\n";
 
 PyObject* is_valid(PyObject* self, PyObject* args) {
+    UNUSED(self);
+    UNUSED(args);
     return NULL;  // XXX
 }
 
@@ -56,6 +68,8 @@ char PARSE_DOC[] =
     "(pre words, main words) -> list of VerbWithContext.\n";
 
 PyObject* parse(PyObject* self, PyObject* args) {
+    UNUSED(self);
+    UNUSED(args);
     return NULL;  // XXX
 }
 
@@ -67,10 +81,17 @@ PyMethodDef FAST_VERB_METHODS[] = {
     {"parse", parse, METH_VARARGS, PARSE_DOC},
 };
 
+}  // namespace
+
+PyMODINIT_FUNC initfast_verb(void);
+
 PyMODINIT_FUNC initfast_verb(void) {
     if (!init_fast_verb()) {
         return;
     }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
     Py_InitModule3("fast_verb", FAST_VERB_METHODS, FAST_VERB_DOC);
+#pragma clang diagnostic pop
 }
