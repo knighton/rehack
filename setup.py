@@ -9,4 +9,9 @@ fast_verb = Extension(
 
 setup(
     ext_modules=[fast_verb],
+    entry_points={
+        'console_scripts': [
+            'panoptes=panoptes.main:main'
+        ],
+    },
 )
