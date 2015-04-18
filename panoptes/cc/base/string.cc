@@ -1,4 +1,4 @@
-#include "string_util.h"
+#include "string.h"
 
 #include <algorithm>   // For trim
 #include <cassert>
@@ -27,7 +27,7 @@ void String::Split(const string& s, char c, vector<string>* v) {
     v->emplace_back(s.substr(prev_c, s.size() - prev_c));
 }
 
-#define INDEX_DNE (size_t)~0
+#define INDEX_DNE ~0ul
 
 void String::SplitByWhitespace(const string& s, vector<string>* v) {
     v->clear();
@@ -78,7 +78,7 @@ bool String::EndsWith(const string& s, const string& with) {
     return s.substr(s.size() - z) == with.substr(with.size() - z);
 }
 
-void InternalStringPrintf(string* output, const char* format, va_list ap) {
+static void InternalStringPrintf(string* output, const char* format, va_list ap) {
     char space[128];    // try a small buffer and hope it fits
 
     // It's possible for methods that use a va_list to invalidate
@@ -86,8 +86,11 @@ void InternalStringPrintf(string* output, const char* format, va_list ap) {
     // of the structure before using it and use that copy instead.
     va_list backup_ap;
     va_copy(backup_ap, ap);
-    size_t bytes_written = (size_t)vsnprintf(
-        space, sizeof(space), format, backup_ap);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+    size_t bytes_written = static_cast<size_t>(vsnprintf(
+        space, sizeof(space), format, backup_ap));
+#pragma clang diagnostic pop
     va_end(backup_ap);
 
     if (bytes_written < sizeof(space)) {
@@ -104,7 +107,11 @@ void InternalStringPrintf(string* output, const char* format, va_list ap) {
 
         // Restore the va_list before we use it again
         va_copy(backup_ap, ap);
-        bytes_written = (size_t)vsnprintf(buf, length, format, backup_ap);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+        bytes_written = static_cast<size_t>(vsnprintf(
+            buf, length, format, backup_ap));
+#pragma clang diagnostic pop
         va_end(backup_ap);
 
         if (bytes_written < length) {

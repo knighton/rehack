@@ -1,6 +1,12 @@
 #ifndef CC_BASE_FILE_H_
 #define CC_BASE_FILE_H_
 
+#include <string>
+#include <vector>
+
+using std::string;
+using std::vector;
+
 class File {
   public:
     // Whether the path is a file.

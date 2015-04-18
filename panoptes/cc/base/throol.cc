@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+uint8_t THROOL_INVALID = static_cast<uint8_t>(~0);
+
 throol::throol(bool could_be_true, bool could_be_false) {
     assert(could_be_true || could_be_false);
     if (could_be_true && could_be_false) {
@@ -38,6 +40,7 @@ const char* throol::ToStr() const {
         return "UNKNOWN";
     default:
         assert(false);
+        return NULL;
     }
 }
 

@@ -3,11 +3,13 @@
 #include <cassert>
 #include <chrono>
 #include <ctime>
+#include <string>
 
-#include "cc/base/string_util.h"
+#include "cc/base/string.h"
 
 using std::chrono::duration_cast;
 using std::chrono::system_clock;
+using std::string;
 
 void Time::PrettyTime(string* s) {
     system_clock::time_point now = system_clock::now();
@@ -21,10 +23,10 @@ void Time::PrettyTime(string* s) {
 
     String::SStringPrintf(
         s, "%04d-%02d-%02d %02d:%02d:%02d.%03d", t.tm_year + 1900, t.tm_mon + 1,
-        t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec, (int)(d * 1000));
+        t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec, static_cast<int>((d * 1000)));
 }
 
 uint64_t Time::MicrosSinceEpoch() {
-    return (uint64_t)duration_cast<std::chrono::microseconds>
-        (system_clock::now().time_since_epoch()).count();
+    return static_cast<uint64_t>(duration_cast<std::chrono::microseconds>
+        (system_clock::now().time_since_epoch()).count());
 }

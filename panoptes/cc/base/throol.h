@@ -10,7 +10,7 @@
 
 using std::string;
 
-#define THROOL_INVALID (uint8_t)~0
+extern uint8_t THROOL_INVALID;
 
 class throol {
   public:

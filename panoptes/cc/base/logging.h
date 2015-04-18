@@ -8,10 +8,6 @@
 
 using std::string;
 
-DECLARE_int32(log_level);
-
-DECLARE_bool(console_colors);
-
 enum LogLevel {
   LOG_FATAL,
   LOG_ERROR,
@@ -21,6 +17,12 @@ enum LogLevel {
 };
 
 extern EnumStrings<LogLevel> LogLevelStrings;
+
+// Minimum level of criticality for a log message to be written.
+#define LOG_LEVEL LOG_DEBUG
+
+// Console-colorize logging output.
+#define USE_CONSOLE_COLORS true
 
 void InitLogging(FILE* f=stderr);
 

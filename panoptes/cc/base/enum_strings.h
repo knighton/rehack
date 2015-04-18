@@ -10,6 +10,9 @@ using std::string;
 using std::vector;
 
 template <typename E>
+vector<E> EnumRange(E a, E z_excl);
+
+template <typename E>
 class EnumStrings {
   public:
     const vector<E>& enum_values() const { return enum_values_; }

@@ -5,14 +5,10 @@
 
 #include "cc/base/time.h"
 
-DEFINE_int32(
-    log_level, LOG_DEBUG,
-    "Minimum level of criticality for a log message to be written.");
-
-DEFINE_bool(console_colors, true, "Console-colorize logging output.");
-
 EnumStrings<LogLevel> LogLevelStrings = EnumStrings<LogLevel>(
     "FATAL ERROR WARN INFO DEBUG");
+
+namespace {
 
 const char* LOG_CONSOLE_COLOR_PREFIXES[] = {
         "\x1B[01;91m",  // Red
@@ -26,10 +22,6 @@ const char* LOG_CONSOLE_COLOR_SUFFIX = "\x1B[0m";
 
 FILE* LOG_F = NULL;
 
-void InitLogging(FILE* f) {
-    LOG_F = f;
-}
-
 void Log(LogLevel log_level, const char* fmt, va_list argptr) {
     // Quit if no output file.
     if (!LOG_F) {
@@ -37,23 +29,29 @@ void Log(LogLevel log_level, const char* fmt, va_list argptr) {
     }
 
     // Lower is more serious.
-    if (FLAGS_log_level < log_level) {
+    if (LOG_LEVEL < log_level) {
         return;
     }
 
     // Write meta info.
     string s;
-    PrettyTime(&s);
+    Time::PrettyTime(&s);
     const string& log_level_s = LogLevelStrings.GetString(log_level);
-    const char* color_prefix = FLAGS_console_colors ?
+    const char* color_prefix = USE_CONSOLE_COLORS ?
         LOG_CONSOLE_COLOR_PREFIXES[log_level] : "";
-    const char* color_suffix = FLAGS_console_colors ?
+    const char* color_suffix = USE_CONSOLE_COLORS ?
         LOG_CONSOLE_COLOR_SUFFIX : "";
     fprintf(LOG_F, "[%s] [%s%s%s] ", s.c_str(), color_prefix,
             log_level_s.c_str(), color_suffix);
 
     // Write message.
     vfprintf(LOG_F, fmt, argptr);
+}
+
+}  // namespace
+
+void InitLogging(FILE* f) {
+    LOG_F = f;
 }
 
 void FATAL(const char* fmt, ...) {

@@ -65,6 +65,6 @@ class String {
                                  const string& new_suffix, string* out);
 };
 
-#include "string_util_impl.h"
+#include "string_impl.h"
 
 #endif  // CC_BASE_STRING_H_

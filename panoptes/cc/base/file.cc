@@ -1,5 +1,6 @@
 #include "file.h"
 
+#include <dirent.h>
 #include <cstdio>
 
 bool File::IsFile(const string& file_name) {
@@ -19,7 +20,7 @@ bool File::FileToString(const string& file_name, string* text) {
     }
 
     fseek(f, 0, SEEK_END);
-    size_t size = (size_t)ftell(f);
+    size_t size = static_cast<size_t>(ftell(f));
     rewind(f);
 
     char* buf = new char[size];

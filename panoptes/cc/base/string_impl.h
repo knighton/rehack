@@ -25,12 +25,12 @@ bool String::ToInt(const string& from, size_t* x, int_t* to) {
         } else {
             got_a_digit = true;
             *to *= 10;
-            *to += (int_t)(from[*x] - '0');
+            *to += static_cast<int_t>(from[*x] - '0');
         }
     }
 
     if (!positive) {
-        *to *= (int_t)-1;
+        *to *= static_cast<int_t>(-1);
     }
 
     return got_a_digit;
