@@ -19,10 +19,10 @@ enum LogLevel {
 extern EnumStrings<LogLevel> LogLevelStrings;
 
 // Minimum level of criticality for a log message to be written.
-#define LOG_LEVEL LOG_DEBUG
+#define LOGGING_LEVEL LOG_DEBUG
 
 // Console-colorize logging output.
-#define USE_CONSOLE_COLORS true
+#define LOGGING_USE_CONSOLE_COLORS true
 
 void InitLogging(FILE* f=stderr);
 

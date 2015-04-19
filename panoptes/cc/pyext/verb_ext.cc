@@ -4,12 +4,8 @@
 
 namespace {
 
-char FAST_VERB_DOC[] =
+char VERB_EXT_DOC[] =
     "Verb handling in C++ for performance reasons.\n";
-
-bool init_fast_verb() {
-    return true;
-}
 
 char CONJUGATE_DOC[] =
     "(lemma, verb field index) -> conjugated verb word or None on error.\n"
@@ -73,7 +69,7 @@ PyObject* parse(PyObject* self, PyObject* args) {
     return NULL;  // XXX
 }
 
-PyMethodDef FAST_VERB_METHODS[] = {
+PyMethodDef VERB_EXT_METHODS[] = {
     {"conjugate", conjugate, METH_VARARGS, CONJUGATE_DOC},
     {"lemmatize", lemmatize, METH_VARARGS, LEMMATIZE_DOC},
     {"say", say, METH_VARARGS, SAY_DOC},
@@ -83,15 +79,13 @@ PyMethodDef FAST_VERB_METHODS[] = {
 
 }  // namespace
 
-PyMODINIT_FUNC initfast_verb(void);
-
-PyMODINIT_FUNC initfast_verb(void) {
-    if (!init_fast_verb()) {
-        return;
-    }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-prototypes"
+PyMODINIT_FUNC initverb_ext(void) {
+#pragma clang diagnostic pop
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wold-style-cast"
-    Py_InitModule3("fast_verb", FAST_VERB_METHODS, FAST_VERB_DOC);
+    Py_InitModule3("verb_ext", VERB_EXT_METHODS, VERB_EXT_DOC);
 #pragma clang diagnostic pop
 }

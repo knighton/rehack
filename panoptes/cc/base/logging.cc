@@ -10,7 +10,7 @@ EnumStrings<LogLevel> LogLevelStrings = EnumStrings<LogLevel>(
 
 namespace {
 
-const char* LOG_CONSOLE_COLOR_PREFIXES[] = {
+const char* CONSOLE_COLOR_PREFIXES[] = {
         "\x1B[01;91m",  // Red
         "\x1B[01;91m",  // Red
         "\x1B[01;93m",  // Yellow
@@ -18,7 +18,7 @@ const char* LOG_CONSOLE_COLOR_PREFIXES[] = {
         "\x1B[01;92m",  // Green
 };
 
-const char* LOG_CONSOLE_COLOR_SUFFIX = "\x1B[0m";
+const char* CONSOLE_COLOR_SUFFIX = "\x1B[0m";
 
 FILE* LOG_F = NULL;
 
@@ -29,7 +29,7 @@ void Log(LogLevel log_level, const char* fmt, va_list argptr) {
     }
 
     // Lower is more serious.
-    if (LOG_LEVEL < log_level) {
+    if (LOGGING_LEVEL < log_level) {
         return;
     }
 
@@ -37,10 +37,10 @@ void Log(LogLevel log_level, const char* fmt, va_list argptr) {
     string s;
     Time::PrettyTime(&s);
     const string& log_level_s = LogLevelStrings.GetString(log_level);
-    const char* color_prefix = USE_CONSOLE_COLORS ?
-        LOG_CONSOLE_COLOR_PREFIXES[log_level] : "";
-    const char* color_suffix = USE_CONSOLE_COLORS ?
-        LOG_CONSOLE_COLOR_SUFFIX : "";
+    const char* color_prefix = LOGGING_USE_CONSOLE_COLORS ?
+        CONSOLE_COLOR_PREFIXES[log_level] : "";
+    const char* color_suffix = LOGGING_USE_CONSOLE_COLORS ?
+        CONSOLE_COLOR_SUFFIX : "";
     fprintf(LOG_F, "[%s] [%s%s%s] ", s.c_str(), color_prefix,
             log_level_s.c_str(), color_suffix);
 

@@ -1,14 +1,14 @@
-#include "utf8.h"
-
 // Based on https://en.wikipedia.org/wiki/UTF-8.
+
+#include "unicode.h"
 
 #include <cassert>
 
 #include "cc/base/logging.h"
 
-using Unicode::CodePoint;
+using unicode::CodePoint;
 
-void UTF8::Append(CodePoint n, string* s) {
+void unicode::AppendUTF8(CodePoint n, string* s) {
     if (n < 0x80) {
         *s += static_cast<char>(n);
         return;
@@ -39,7 +39,7 @@ void UTF8::Append(CodePoint n, string* s) {
     assert(false);
 }
 
-bool UTF8::ReadNext(const string& s, size_t* x, CodePoint* n) {
+bool unicode::ReadNextUTF8(const string& s, size_t* x, CodePoint* n) {
     if (!(*x < s.size())) {
         return false;
     }
@@ -123,4 +123,17 @@ bool UTF8::ReadNext(const string& s, size_t* x, CodePoint* n) {
     ERROR1:
         *n = c0 + 0xDC00;
     return false;
+}
+
+bool unicode::ExpectNextUTF8(
+        const string& s, size_t* x, CodePoint* n, CodePoint expected) {
+    if (!unicode::ReadNextUTF8(s, x, n)) {
+        return false;
+    }
+
+    if (*n != expected) {
+        return false;
+    }
+
+    return true;
 }
